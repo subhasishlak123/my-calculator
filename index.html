@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calc by Subhasish Lakshman</title>
     <style>
-        /* CSS: Full Screen & Pro Layout */
+        /* CSS: Full Screen & Layout */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -27,32 +27,32 @@
             width: 100vw;
         }
 
-        /* BRAND CREDIT WITH VANISHING ANIMATION */
+        /* BRAND CREDIT WITH FADE-OUT ANIMATION */
         .brand-credit {
             position: absolute;
-            top: calc(50px + env(safe-area-inset-top));
+            /* Safe area positioning to clear notification panel */
+            top: calc(45px + env(safe-area-inset-top)); 
             right: 25px;
             text-align: right;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             z-index: 100;
             pointer-events: none;
-
-            /* Animation: wait 15s, then run 'vanish' for 1s */
-            animation: vanish 1s ease-in forwards;
-            animation-delay: 15s;
+            
+            /* Animation: name | duration | timing | delay | fill-mode */
+            animation: vanish 1s ease-in-out 5s forwards;
         }
 
         .brand-credit span {
-            color: #ff9f0a;
+            color: #ff9f0a; 
             font-weight: bold;
             display: block;
             font-size: 13px;
         }
 
-        /* The Vanishing Effect */
+        /* Animation Keyframes */
         @keyframes vanish {
             0% {
                 opacity: 1;
@@ -60,7 +60,7 @@
             }
             100% {
                 opacity: 0;
-                transform: translateY(-20px); /* Slides up slightly as it fades */
+                transform: translateY(-10px); /* Slight upward lift as it fades */
                 visibility: hidden;
             }
         }
@@ -120,6 +120,7 @@
 </head>
 <body>
 
+    <!-- This div will vanish after 5 seconds -->
     <div class="brand-credit">
         Build by <span>SUBHASISH LAKSHMAN</span>
     </div>
