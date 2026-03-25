@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calc by Subhasish Lakshman</title>
     <style>
-        /* CSS: Full Screen Layout */
+        /* CSS: Full Screen & Notch Support */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -17,7 +17,7 @@
             width: 100%;
             overflow: hidden;
             background-color: #000;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
         .calculator {
@@ -27,13 +27,13 @@
             width: 100vw;
         }
 
-        /* Branding in the Upper Corner */
+        /* FIXED: Added Safe Area Inset to clear the Notification Panel */
         .brand-credit {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: calc(50px + env(safe-area-inset-top)); /* Moves it below the clock/notches */
+            right: 25px;
             text-align: right;
-            color: rgba(255, 255, 255, 0.3); /* Subtle white */
+            color: rgba(255, 255, 255, 0.4);
             font-size: 11px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -44,16 +44,19 @@
         .brand-credit span {
             color: #ff9f0a; /* Signature Orange */
             font-weight: bold;
+            display: block; /* Puts name on a new line */
+            font-size: 13px;
         }
 
         #display {
-            flex: 1.5; /* Large display area */
+            flex: 1.5;
             width: 100%;
             background-color: #000;
             color: #fff;
             border: none;
             text-align: right;
-            padding: 80px 25px 20px;
+            /* Extra top padding so numbers don't touch the credit */
+            padding: calc(100px + env(safe-area-inset-top)) 25px 20px;
             font-size: 20vw;
             outline: none;
             font-weight: 200;
@@ -66,6 +69,8 @@
             grid-template-rows: repeat(5, 1fr);
             gap: 1px;
             background-color: #333;
+            /* Padding at the bottom for gesture navigation bars */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         button {
@@ -100,9 +105,9 @@
 </head>
 <body>
 
-    <!-- Upper Corner Credit -->
+    <!-- Upper Corner Credit (Safe from Status Bar) -->
     <div class="brand-credit">
-        Build by<br><span>SUBHASISH LAKSHMAN</span>
+        Build by <span>SUBHASISH LAKSHMAN</span>
     </div>
 
     <div class="calculator">
@@ -155,11 +160,8 @@
 
         function calculate() {
             try {
-                // Calculation logic
                 let expression = display.value.replace('×', '*').replace('÷', '/');
                 let result = eval(expression);
-                
-                // Keep result clean
                 if (result.toString().includes('.')) {
                     result = parseFloat(result.toFixed(6));
                 }
@@ -168,14 +170,6 @@
                 display.value = "Error";
             }
         }
-
-        // Keyboard Support
-        document.addEventListener('keydown', (e) => {
-            if (e.key >= 0 && e.key <= 9) addToDisplay(e.key);
-            if (e.key === 'Enter') calculate();
-            if (e.key === 'Backspace') deleteDigit();
-            if (e.key === 'Escape') clearDisplay();
-        });
     </script>
 </body>
 </html>
