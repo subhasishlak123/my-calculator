@@ -1,5 +1,5 @@
 name: Build Android APK
-on: [push] # Trigger every time you save code
+on: [push]
 
 jobs:
   build:
@@ -13,14 +13,28 @@ jobs:
         with:
           node-version: 20
 
+      # FIX: Create a 'www' folder and move your HTML file into it
+      - name: Prepare Web Directory
+        run: |
+          mkdir www
+          cp index.html www/
+          # If you have a style.css or script.js, copy them too:
+          # cp style.css www/ 2>/dev/null || true
+          # cp script.js www/ 2>/dev/null || true
+
       - name: Install Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "MyCalc" "com.example.calc" --web-dir .
+          # Point web-dir to the 'www' folder we just created
+          npx cap init "MyCalc" "com.example.calc" --web-dir www
           npx cap add android
 
       - name: Build APK
-        run: npx cap copy android && cd android && ./gradlew assembleDebug
+        run: |
+          npx cap copy android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
