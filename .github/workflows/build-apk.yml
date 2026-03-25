@@ -8,11 +8,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # FIX: Explicitly set up Java 21
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # Open-source distribution of Java
+          distribution: 'zulu'
           java-version: '21'
 
       - name: Set up Node.js
@@ -30,6 +29,14 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init "MyCalc" "com.example.calc" --web-dir www
           npx cap add android
+
+      # FIX: Patch the build file to remove duplicate Kotlin classes
+      - name: Patch Gradle Duplicate Classes
+        run: |
+          echo "configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }" >> android/build.gradle
 
       - name: Build APK
         run: |
