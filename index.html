@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calc by Subhasish Lakshman</title>
     <style>
-        /* CSS: Full Screen & Notch Support */
+        /* CSS: Full Screen & Pro Layout */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -27,10 +27,10 @@
             width: 100vw;
         }
 
-        /* FIXED: Added Safe Area Inset to clear the Notification Panel */
+        /* BRAND CREDIT WITH VANISHING ANIMATION */
         .brand-credit {
             position: absolute;
-            top: calc(50px + env(safe-area-inset-top)); /* Moves it below the clock/notches */
+            top: calc(50px + env(safe-area-inset-top));
             right: 25px;
             text-align: right;
             color: rgba(255, 255, 255, 0.4);
@@ -39,13 +39,30 @@
             text-transform: uppercase;
             z-index: 100;
             pointer-events: none;
+
+            /* Animation: wait 15s, then run 'vanish' for 1s */
+            animation: vanish 1s ease-in forwards;
+            animation-delay: 15s;
         }
 
         .brand-credit span {
-            color: #ff9f0a; /* Signature Orange */
+            color: #ff9f0a;
             font-weight: bold;
-            display: block; /* Puts name on a new line */
+            display: block;
             font-size: 13px;
+        }
+
+        /* The Vanishing Effect */
+        @keyframes vanish {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px); /* Slides up slightly as it fades */
+                visibility: hidden;
+            }
         }
 
         #display {
@@ -55,7 +72,6 @@
             color: #fff;
             border: none;
             text-align: right;
-            /* Extra top padding so numbers don't touch the credit */
             padding: calc(100px + env(safe-area-inset-top)) 25px 20px;
             font-size: 20vw;
             outline: none;
@@ -69,7 +85,6 @@
             grid-template-rows: repeat(5, 1fr);
             gap: 1px;
             background-color: #333;
-            /* Padding at the bottom for gesture navigation bars */
             padding-bottom: env(safe-area-inset-bottom);
         }
 
@@ -105,16 +120,13 @@
 </head>
 <body>
 
-    <!-- Upper Corner Credit (Safe from Status Bar) -->
     <div class="brand-credit">
         Build by <span>SUBHASISH LAKSHMAN</span>
     </div>
 
     <div class="calculator">
-        <!-- Result Screen -->
         <input type="text" id="display" readonly placeholder="0">
 
-        <!-- Button Layout -->
         <div class="buttons">
             <button class="special" onclick="clearDisplay()">AC</button>
             <button class="special" onclick="deleteDigit()">DEL</button>
