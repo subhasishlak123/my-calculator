@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Full Screen Calculator</title>
+    <style>
+        /* CSS: Making it fit the screen perfectly */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Prevents scrolling */
+            background-color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* 100% of the viewport height */
+            width: 100vw;  /* 100% of the viewport width */
+        }
+
+        #display {
+            flex: 1; /* Takes up the top portion of the screen */
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            text-align: right;
+            padding: 40px 20px;
+            font-size: 15vw; /* Font size scales with screen width */
+            outline: none;
+        }
+
+        .buttons {
+            flex: 3; /* Takes up the remaining 75% of the screen */
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 2px; /* Thin lines between buttons */
+            background-color: #333; /* Color of the grid lines */
+        }
+
+        button {
+            width: 100%;
+            height: 100%;
+            border: none;
+            font-size: 6vh; /* Font scales with screen height */
+            cursor: pointer;
+            background-color: #1c1c1c;
+            color: white;
+            transition: opacity 0.1s;
+        }
+
+        button:active {
+            opacity: 0.6;
+        }
+
+        /* Operator Colors */
+        .operator {
+            background-color: #ff9f0a;
+            font-weight: bold;
+        }
+
+        .special {
+            background-color: #a5a5a5;
+            color: black;
+        }
+
+        /* Make the 0 button span two columns */
+        .double {
+            grid-column: span 2;
+        }
+
+        /* Remove input arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <!-- Display area -->
+        <input type="text" id="display" readonly placeholder="0">
+
+        <!-- Button grid area -->
+        <div class="buttons">
+            <button class="special" onclick="clearDisplay()">AC</button>
+            <button class="special" onclick="deleteDigit()">DEL</button>
+            <button class="special" onclick="addToDisplay('%')">%</button>
+            <button class="operator" onclick="addToDisplay('/')">÷</button>
+
+            <button onclick="addToDisplay('7')">7</button>
+            <button onclick="addToDisplay('8')">8</button>
+            <button onclick="addToDisplay('9')">9</button>
+            <button class="operator" onclick="addToDisplay('*')">×</button>
+
+            <button onclick="addToDisplay('4')">4</button>
+            <button onclick="addToDisplay('5')">5</button>
+            <button onclick="addToDisplay('6')">6</button>
+            <button class="operator" onclick="addToDisplay('-')">−</button>
+
+            <button onclick="addToDisplay('1')">1</button>
+            <button onclick="addToDisplay('2')">2</button>
+            <button onclick="addToDisplay('3')">3</button>
+            <button class="operator" onclick="addToDisplay('+')">+</button>
+
+            <button class="double" onclick="addToDisplay('0')">0</button>
+            <button onclick="addToDisplay('.')">.</button>
+            <button class="operator" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function addToDisplay(input) {
+            if (display.value === "Error") clearDisplay();
+            display.value += input;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteDigit() {
+            display.value = display.value.toString().slice(0, -1);
+        }
+
+        function calculate() {
+            try {
+                // Evaluates the math string
+                let result = eval(display.value);
+                
+                // Format decimals so they don't break the screen
+                if (result.toString().includes('.')) {
+                    result = parseFloat(result.toFixed(4));
+                }
+                
+                display.value = result;
+            } catch (error) {
+                display.value = "Error";
+            }
+        }
+
+        // Allow keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= 0 && e.key <= 9) addToDisplay(e.key);
+            if (e.key === '+') addToDisplay('+');
+            if (e.key === '-') addToDisplay('-');
+            if (e.key === '*') addToDisplay('*');
+            if (e.key === '/') addToDisplay('/');
+            if (e.key === 'Enter' || e.key === '=') calculate();
+            if (e.key === 'Backspace') deleteDigit();
+            if (e.key === 'Escape') clearDisplay();
+        });
+    </script>
+</body>
+</html>
